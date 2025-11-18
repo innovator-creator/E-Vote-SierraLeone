@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>E-Vote Sierra Leone - Demo</title>
+</head>
+<body style="font-family: Arial, sans-serif; padding:20px;">
+  <h1>E-Vote Sierra Leone</h1>
+  <p>Biometric + Blockchain Voting Prototype (Demo)</p>
+
+  <form id="verifyForm">
+      <input id="nin" placeholder="Enter National ID Number" style="padding:8px; width:250px;" />
+      <button type="submit" style="padding:8px 12px;">Verify Identity</button>
+  </form>
+
+  <p id="result" style="margin-top:16px; font-weight:600;"></p>
+
+  <script>
+    document.getElementById('verifyForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const nin = document.getElementById('nin').value.trim();
+      if(!nin){ document.getElementById('result').innerText = "Please enter a NIN."; return; }
+
+      try {
+        const res = await fetch('http://localhost:5000/api/verify?nin=' + encodeURIComponent(nin));
+        const data = await res.json();
+        document.getElementById('result').innerText = data.message;
+      } catch (err) {
+        document.getElementById('result').innerText = "Cannot reach backend. Make sure server is running.";
+      }
+    };
+  </script>
+</body>
+</html>
